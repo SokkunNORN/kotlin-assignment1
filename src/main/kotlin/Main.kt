@@ -1,6 +1,7 @@
 import model.Customer
 import service.CustomerService
 import service.MenuService
+import java.io.Console
 
 fun main(args: Array<String>) {
 //    Mini Bank Application
@@ -14,13 +15,13 @@ fun mainMenu () {
     val listMenu = listOf("1", "2", "3", "4", "5")
     val menu = listOf(2, 3, 4)
 
-    when (MenuService.getNumberMenu(listMenu)) {
+    when (val menuNumber = MenuService.getNumberMenu(listMenu)) {
         1 -> {
             customerMenu()
         }
         in menu -> {
             if (customer.user != null) {
-                when (MenuService.getNumberMenu(listMenu)) {
+                when (menuNumber) {
 
                 }
             } else {
