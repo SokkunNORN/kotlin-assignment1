@@ -13,7 +13,7 @@ class CustomerService {
         val password = readLine()
 
         val customer = customerList.firstOrNull() { it.name == name && it.password == password} ?: kotlin.run {
-            throw NullPointerException("Incorrect name and password!!")
+            println("Incorrect name and password!!")
             return false
         }
 

@@ -46,6 +46,7 @@ fun customerMenu() {
                 customer.viewProfile()
             } else {
                 customer.login()
+                customerMenu()
             }
         }
         2 -> {
