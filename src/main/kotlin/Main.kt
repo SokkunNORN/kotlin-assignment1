@@ -44,6 +44,7 @@ fun customerMenu() {
         1 -> {
             if (customer.user != null) {
                 customer.viewProfile()
+                customerMenu()
             } else {
                 customer.login()
                 customerMenu()
@@ -52,6 +53,7 @@ fun customerMenu() {
         2 -> {
             if (customer.user != null) {
                 customer.customerListView()
+                customerMenu()
             } else {
                 if (customer.createCustomer()) {
                     println("You have sign up a user successfully!!")
@@ -63,7 +65,8 @@ fun customerMenu() {
         }
         3 -> {
             if (customer.user != null) {
-                customer.viewProfile()
+                customer.logout()
+                customerMenu()
             } else {
                 mainMenu()
             }

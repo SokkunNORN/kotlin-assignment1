@@ -20,15 +20,16 @@ class MenuService {
             println("============== Customer Account ================")
             if (user != null) {
                 println(
-                    "| 1 View Profile                               |\n" +
-                    "| 2 Customer List                              |\n" +
-                    "| 3 Exit                                       |"
+                    "| 1. View Profile                              |\n" +
+                    "| 2. Customer List                             |\n" +
+                    "| 3. Sign Out                                  |\n" +
+                    "| 4. Exit                                      |"
                 )
             } else {
                 println(
-                    "| 1 Sing In                                    |\n" +
-                    "| 2 Sing Up                                    |\n" +
-                    "| 3 Exit                                       |"
+                    "| 1. Sing In                                   |\n" +
+                    "| 2. Sing Up                                   |\n" +
+                    "| 3. Exit                                      |"
                 )
             }
             println("================================================")
@@ -39,7 +40,7 @@ class MenuService {
             var menuNumber : Int = -1
 
             do {
-                println("Input Menu Number: ")
+                println("Input Number: ")
                 var menu = readLine()
                 when (menu) {
                     in listMenu
@@ -49,7 +50,7 @@ class MenuService {
                         }
                         isValid = true
                     }
-                    else -> println("Please input valid number of menu again...")
+                    else -> println("Please input valid number again...")
                 }
             } while (!isValid)
 
