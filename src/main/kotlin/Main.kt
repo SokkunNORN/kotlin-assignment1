@@ -24,10 +24,9 @@ fun mainMenu () {
             if (customer.user != null) {
                 when (menuNumber) {
                     2 -> {
-                        val amount = transaction.createTransfer(customer)
-                        if (amount != null) {
-                            val balance = customer.user!!.balance.minus(amount)
-                            customer.user!!.balance = balance
+                        val transaction = transaction.createTransfer(customer)
+                        if (transaction != null) {
+                            customer.updateBalance(transaction)
                         }
                     }
                     3 -> transaction.showTransferHistory(customer.user!!)

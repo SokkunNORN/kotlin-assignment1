@@ -2,6 +2,7 @@ package service
 
 import model.Address
 import model.Customer
+import model.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -176,6 +177,21 @@ class CustomerService {
                 }
                 2 -> println("You have cancelled top up balance successfully!!")
             }
+        }
+    }
+
+    fun updateBalance (transaction: Transaction) {
+        if (user != null) {
+            var index = allCustomerList.indexOf(transaction.senderAccount)
+            val senderBalance = transaction.senderAccount.balance.minus(transaction.amount)
+            user!!.balance = senderBalance
+            allCustomerList[index] = user!!
+
+            val receiver = transaction.receiverAccount
+            index = allCustomerList.indexOf(receiver)
+            val receiverBalance = receiver.balance.plus(transaction.amount)
+            receiver.balance = receiverBalance
+            allCustomerList[index] = receiver
         }
     }
 }

@@ -18,7 +18,7 @@ class TransferService {
         return text
     }
 
-    fun createTransfer (customerService : CustomerService) : BigDecimal? {
+    fun createTransfer (customerService : CustomerService) : Transaction? {
         if (customerService.user == null) {
             println("Please sign in to the application first!!")
             return null
@@ -54,7 +54,7 @@ class TransferService {
                 1 -> {
                     transferList.add(transfer)
                     println("Transaction is sent successfully!!")
-                    return BigDecimal(amount)
+                    return transfer
                 }
                 2 -> println("You have cancelled fund transfer!!")
             }
