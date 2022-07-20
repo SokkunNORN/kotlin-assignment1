@@ -62,9 +62,10 @@ class TransferService {
         return null
     }
 
-    fun showTransferHistory (sender: Customer) {
+    fun showTransferHistory (user: Customer) {
         val list = transferList.filter {
-            it.senderAccount.name == sender.name && it.senderAccount.password == sender.password
+            (it.senderAccount.name == user.name && it.senderAccount.password == user.password) ||
+            (it.receiverAccount.name == user.name && it.receiverAccount.password == user.password)
         }
         ownerTransfer.clear()
         ownerTransfer.addAll(list)
@@ -73,6 +74,7 @@ class TransferService {
         if (ownerTransfer.isNotEmpty()) {
             for (transfer : Transaction in ownerTransfer) {
                 println(
+                    "| Receiver Name: ${transfer.senderAccount.name}\n" +
                     "| Receiver Name: ${transfer.receiverAccount.name}\n" +
                     "| Amount: ${transfer.amount}\n" +
                     "| Message: ${transfer.message}\n" +
