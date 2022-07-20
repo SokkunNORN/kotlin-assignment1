@@ -8,10 +8,10 @@ import java.time.LocalDate
 class CustomerService {
     var user : Customer? = null
     private val allCustomerList = mutableListOf<Customer>(
-        Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "kkk", "kdkd", "Phnom Penh")),
-        Customer("Jenny", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "kkk", "kdkd", "Phnom Penh")),
-        Customer("Karry", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "kkk", "kdkd", "Phnom Penh")),
-        Customer("Visa", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "kkk", "kdkd", "Phnom Penh"))
+        Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
+        Customer("Jenny", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
+        Customer("Karry", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
+        Customer("Visa", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh"))
     )
     private var receiverList = mutableListOf<Customer>()
 
@@ -101,8 +101,8 @@ class CustomerService {
             println(
                 "| Name: ${user!!.name}\n" +
                 "| Gender: ${user!!.gender}\n" +
-                "| Date of Birth:  ${user!!.dateOfBirth}\n" +
-                "| Balance:  ${user!!.balance}\n" +
+                "| Date of Birth: ${user!!.dateOfBirth}\n" +
+                "| Balance: ${user!!.balance}\n" +
                 "| Address: \n" +
                 "   - Street No: ${user!!.address.streetNo}\n" +
                 "   - Builder No: ${user!!.address.buildingNo}\n" +
@@ -156,5 +156,26 @@ class CustomerService {
             }
         }
         return null
+    }
+
+    fun topUpBalance () {
+        if (user == null) {
+            println("Please sign in the application first!!")
+        } else {
+            val amount = textInput("Amount").toInt()
+
+            println(
+                "1. Top up\n" +
+                "2. Cancel"
+            )
+            when (MenuService.getNumberMenu(listOf("1", "2"))) {
+                1 -> {
+                    val newBalance = user!!.balance.plus(BigDecimal(amount))
+                    user!!.balance = newBalance
+                    println("You have topped up balance successfully!!")
+                }
+                2 -> println("You have cancelled top up balance successfully!!")
+            }
+        }
     }
 }

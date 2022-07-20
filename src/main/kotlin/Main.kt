@@ -30,6 +30,7 @@ fun mainMenu () {
                         }
                     }
                     3 -> transaction.showTransferHistory(customer.user!!)
+                    4 -> customer.topUpBalance()
                 }
             } else {
                 println("Please sign in the application first!!!")
