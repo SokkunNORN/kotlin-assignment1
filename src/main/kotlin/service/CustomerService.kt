@@ -7,7 +7,12 @@ import java.time.LocalDate
 
 class CustomerService {
     var user : Customer? = null
-    private val allCustomerList = mutableListOf<Customer>()
+    private val allCustomerList = mutableListOf<Customer>(
+        Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "kkk", "kdkd", "Phnom Penh")),
+        Customer("Jenny", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "kkk", "kdkd", "Phnom Penh")),
+        Customer("Karry", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "kkk", "kdkd", "Phnom Penh")),
+        Customer("Visa", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "kkk", "kdkd", "Phnom Penh"))
+    )
     private var receiverList = mutableListOf<Customer>()
 
     fun login () : Boolean {
@@ -131,7 +136,7 @@ class CustomerService {
 
     fun getReceiver () : Customer? {
         if (user != null) {
-            val list = allCustomerList.filter { it.name != user!!.name && it.password != user!!.password }
+            val list = allCustomerList.filter { it.name != user!!.name || it.password != user!!.password }
             receiverList.addAll(list)
             val menuList = mutableListOf<String>()
 
@@ -144,7 +149,7 @@ class CustomerService {
 
                 val number = MenuService.getNumberMenu(menuList)
 
-                return receiverList[number]
+                return receiverList[number - 1]
             } else {
                 println("Did not have account receiver yet!!")
             }
