@@ -137,6 +137,7 @@ class CustomerService {
     fun getReceiver () : Customer? {
         if (user != null) {
             val list = allCustomerList.filter { it.name != user!!.name || it.password != user!!.password }
+            receiverList.clear()
             receiverList.addAll(list)
             val menuList = mutableListOf<String>()
 

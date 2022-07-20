@@ -29,6 +29,7 @@ fun mainMenu () {
                             println("Fund transfer with amount: $amount")
                         }
                     }
+                    3 -> transaction.showTransferHistory(customer.user!!)
                 }
             } else {
                 println("Please sign in the application first!!!")

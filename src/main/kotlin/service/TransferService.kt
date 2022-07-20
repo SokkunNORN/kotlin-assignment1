@@ -3,10 +3,10 @@ package service
 import model.Customer
 import model.Transaction
 import java.math.BigDecimal
-import java.time.LocalDate
 
 class TransferService {
     private val transferList = mutableListOf<Transaction>()
+    private val ownerTransfer = mutableListOf<Transaction>()
 
     private fun textInput (label: String) : String {
         println("$label: ")
@@ -60,5 +60,30 @@ class TransferService {
             }
         }
         return null
+    }
+
+    fun showTransferHistory (sender: Customer) {
+        val list = transferList.filter {
+            it.senderAccount.name == sender.name && it.senderAccount.password == sender.password
+        }
+        ownerTransfer.clear()
+        ownerTransfer.addAll(list)
+
+        println("============== Transfer History ==============")
+        if (ownerTransfer.isNotEmpty()) {
+            for (transfer : Transaction in ownerTransfer) {
+                println(
+                    "| Receiver Name: ${transfer.receiverAccount.name}\n" +
+                    "| Amount: ${transfer.amount}\n" +
+                    "| Message: ${transfer.message}\n" +
+                    "| Created At: ${transfer.createdAt}\n" +
+                    "| Sent At: ${transfer.sentAt}\n" +
+                    "=============================================="
+                )
+            }
+        } else {
+            println("| You did have any transfer yet!!")
+        }
+
     }
 }
