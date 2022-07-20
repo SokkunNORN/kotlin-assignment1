@@ -23,7 +23,7 @@ class TransferService {
             println("Please sign in to the application first!!")
             return null
         }
-        if (customerService.user!!.balance < BigDecimal(0)) {
+        if (customerService.user!!.balance <= BigDecimal(0)) {
             println("You balance is ${customerService.user!!.balance}. \nPlease top up your balance!!")
             return null
         }
@@ -31,7 +31,7 @@ class TransferService {
         println("Please input: ")
         var amount = textInput("Amount")
         while (BigDecimal(amount.toInt()) > customerService.user!!.balance) {
-            println("Amount is over than your balance. Please input again...")
+            println("You balance is not enough. Please input again...")
             amount = textInput("Amount")
         }
         val message = textInput("Message")

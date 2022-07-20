@@ -8,7 +8,7 @@ import java.time.LocalDate
 class CustomerService {
     var user : Customer? = null
     private val allCustomerList = mutableListOf<Customer>(
-        Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
+        Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(0), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
         Customer("Jenny", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
         Customer("Karry", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
         Customer("Visa", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh"))
