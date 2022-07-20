@@ -1,6 +1,8 @@
 import model.Customer
+import model.Transaction
 import service.CustomerService
 import service.MenuService
+import service.TransferService
 import java.io.Console
 
 fun main(args: Array<String>) {
@@ -9,6 +11,7 @@ fun main(args: Array<String>) {
 }
 
 val customer = CustomerService()
+val transaction = TransferService()
 
 fun mainMenu () {
     MenuService.showMainMenu()
@@ -16,18 +19,21 @@ fun mainMenu () {
     val menu = listOf(2, 3, 4)
 
     when (val menuNumber = MenuService.getNumberMenu(listMenu)) {
-        1 -> {
-            customerMenu()
-        }
+        1 -> customerMenu()
         in menu -> {
             if (customer.user != null) {
                 when (menuNumber) {
-
+                    2 -> {
+                        val amount = transaction.createTransfer(customer)
+                        if (amount != null) {
+                            println("Fund transfer with amount: $amount")
+                        }
+                    }
                 }
             } else {
                 println("Please sign in the application first!!!")
-                mainMenu()
             }
+            mainMenu()
         }
         5 -> println("Shutdown...")
     }

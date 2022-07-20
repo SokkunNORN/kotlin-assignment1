@@ -7,6 +7,7 @@ data class Transaction(
     var senderAccount: Customer,
     var receiverAccount: Customer,
     var amount : BigDecimal,
+    var message : String? = "",
     var createdAt : LocalDateTime = LocalDateTime.now(),
     val sentAt : LocalDateTime = LocalDateTime.now()
 )

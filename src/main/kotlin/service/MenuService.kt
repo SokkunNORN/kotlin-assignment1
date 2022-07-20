@@ -37,7 +37,7 @@ class MenuService {
 
         fun getNumberMenu (listMenu: List<String>) : Int {
             var isValid = false
-            var menuNumber : Int = -1
+            var menuNumber: Int = -1
 
             do {
                 println("Input Number: ")

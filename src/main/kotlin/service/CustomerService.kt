@@ -7,7 +7,8 @@ import java.time.LocalDate
 
 class CustomerService {
     var user : Customer? = null
-    private val customerList = mutableListOf<Customer>()
+    private val allCustomerList = mutableListOf<Customer>()
+    private var receiverList = mutableListOf<Customer>()
 
     fun login () : Boolean {
         println("Input name: ")
@@ -15,7 +16,9 @@ class CustomerService {
         println("Input password: ")
         val password = readLine()
 
-        val customer = customerList.firstOrNull() { it.name == name && it.password == password} ?: kotlin.run {
+        val customer = allCustomerList.firstOrNull() {
+            it.name == name && it.password == password
+        } ?: kotlin.run {
             println("Incorrect name and password!!")
             return false
         }
@@ -76,7 +79,7 @@ class CustomerService {
 
         return when (MenuService.getNumberMenu(listOf("1", "2"))) {
             1 -> {
-                customerList.add(customer)
+                allCustomerList.add(customer)
                 user = customer
                 true
             }
@@ -110,12 +113,11 @@ class CustomerService {
         println(
             "================= Profile ================="
         )
-        for (customer : Customer in customerList) {
+        for (customer : Customer in allCustomerList) {
             println(
                 "| Name: ${customer!!.name}\n" +
                 "| Gender: ${customer!!.gender}\n" +
                 "| Date of Birth:  ${customer!!.dateOfBirth}\n" +
-                "| Balance:  ${customer!!.balance}\n" +
                 "| Address: \n" +
                 "   - Street No: ${customer!!.address.streetNo}\n" +
                 "   - Builder No: ${customer!!.address.buildingNo}\n" +
@@ -125,5 +127,28 @@ class CustomerService {
                 "==========================================="
             )
         }
+    }
+
+    fun getReceiver () : Customer? {
+        if (user != null) {
+            val list = allCustomerList.filter { it.name != user!!.name && it.password != user!!.password }
+            receiverList.addAll(list)
+            val menuList = mutableListOf<String>()
+
+            if (receiverList.isNotEmpty()) {
+                println("======== Please select receiver account ========")
+                receiverList.forEachIndexed{ index, customer ->
+                    println("| ${index + 1}. ${customer.name}")
+                    menuList.add("${index + 1}")
+                }
+
+                val number = MenuService.getNumberMenu(menuList)
+
+                return receiverList[number]
+            } else {
+                println("Did not have account receiver yet!!")
+            }
+        }
+        return null
     }
 }
