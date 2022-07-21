@@ -18,6 +18,16 @@ class TransferService {
         return text
     }
 
+    private fun amountInput () : Int {
+        var amount = textInput("Amount").toIntOrNull()
+        while (amount == null || amount < 1) {
+            println("Invalid amount, Please input again!!")
+            amount = textInput("Amount").toIntOrNull()
+        }
+
+        return amount
+    }
+
     fun createTransfer (customerService : CustomerService) : Transaction? {
         if (customerService.user == null) {
             println("Please sign in to the application first!!")
@@ -29,10 +39,11 @@ class TransferService {
         }
 
         println("Please input: ")
-        var amount = textInput("Amount")
-        while (BigDecimal(amount.toInt()) > customerService.user!!.balance) {
+        var amount = amountInput()
+
+        while (BigDecimal(amount) > customerService.user!!.balance) {
             println("You balance is not enough. Please input again...")
-            amount = textInput("Amount")
+            amount = amountInput()
         }
         val message = textInput("Message")
         val customer = customerService.getReceiver()
@@ -41,7 +52,7 @@ class TransferService {
             val transfer = Transaction(
                 customerService.user!!,
                 customer,
-                amount = BigDecimal(amount.toInt()),
+                amount = BigDecimal(amount),
                 message
             )
 

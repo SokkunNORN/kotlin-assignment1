@@ -54,7 +54,7 @@ class CustomerService {
         val password = textInput("Password")
         val gender = textInput("Gender")
         val dateOfBirth = LocalDate.now()
-        val balance = textInput("Balance")
+        val balance = BigDecimal(0)
         val streetNo = textInput("Street No")
         val buildingNo = textInput("Building No")
         val district = textInput("District")
@@ -163,7 +163,12 @@ class CustomerService {
         if (user == null) {
             println("Please sign in the application first!!")
         } else {
-            val amount = textInput("Amount").toInt()
+            var amount = textInput("Amount").toIntOrNull()
+
+            while (amount == null || amount < 1) {
+                println("Invalid amount, Please input again!!")
+                amount = textInput("Amount").toIntOrNull()
+            }
 
             println(
                 "1. Top up\n" +
