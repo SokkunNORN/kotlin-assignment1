@@ -22,12 +22,16 @@ fun mainMenu () {
             if (customer.user != null) {
                 when (menuNumber) {
                     2 -> {
-                        val transaction = transaction.createTransfer(customer)
-                        if (transaction != null) {
-                            customer.updateBalance(transaction)
+                        if (customer.user != null) {
+                            val transaction = transaction.createTransfer(customer)
+                            if (transaction != null) {
+                                customer.updateBalance(transaction)
+                            }
                         }
                     }
-                    3 -> transaction.showTransferHistory(customer.user!!)
+                    3 -> {
+                        transactionHistoryMenu()
+                    }
                     4 -> customer.topUpBalance()
                 }
             } else {
@@ -39,7 +43,7 @@ fun mainMenu () {
     }
 }
 
-fun customerMenu() {
+fun customerMenu () {
     MenuService.showCustomerMenu(customer.user)
     val list = mutableListOf("1", "2", "3")
 
@@ -79,5 +83,33 @@ fun customerMenu() {
             }
         }
         4 -> mainMenu()
+    }
+}
+
+fun transactionHistoryMenu () {
+    MenuService.showTransferHistoryMenu()
+    val list = listOf("1", "2", "3", "4", "5", "6")
+
+    when (MenuService.getNumberMenu(list)) {
+        1 -> {
+            transaction.showTransferHistory(customer)
+            transactionHistoryMenu()
+        }
+        2 -> {
+            transaction.showTransferHistory(customer, isSender = true)
+            transactionHistoryMenu()
+        }
+        3 -> {
+            transaction.showTransferHistory(customer, isReceiver = true)
+            transactionHistoryMenu()
+        }
+        4 -> {
+            transaction.showTransferHistory(customer, isAmount = true)
+            transactionHistoryMenu()
+        }
+        5 -> {
+            transaction.showTransferHistory(customer, isSentAt = true)
+            transactionHistoryMenu()
+        }
     }
 }

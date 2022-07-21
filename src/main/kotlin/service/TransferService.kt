@@ -18,11 +18,11 @@ class TransferService {
         return text
     }
 
-    private fun amountInput () : Int {
-        var amount = textInput("Amount").toIntOrNull()
+    private fun amountInput (label: String = "Amount") : Int {
+        var amount = textInput(label).toIntOrNull()
         while (amount == null || amount < 1) {
             println("Invalid amount, Please input again!!")
-            amount = textInput("Amount").toIntOrNull()
+            amount = textInput(label).toIntOrNull()
         }
 
         return amount
@@ -73,30 +73,78 @@ class TransferService {
         return null
     }
 
-    fun showTransferHistory (user: Customer) {
-        val list = transferList.filter {
-            (it.senderAccount.name == user.name && it.senderAccount.password == user.password) ||
-            (it.receiverAccount.name == user.name && it.receiverAccount.password == user.password)
-        }
-        ownerTransfer.clear()
-        ownerTransfer.addAll(list)
-
-        println("============== Transfer History ==============")
-        if (ownerTransfer.isNotEmpty()) {
-            for (transfer : Transaction in ownerTransfer) {
-                println(
-                    "| Receiver Name: ${transfer.senderAccount.name}\n" +
-                    "| Receiver Name: ${transfer.receiverAccount.name}\n" +
-                    "| Amount: ${transfer.amount}\n" +
-                    "| Message: ${transfer.message}\n" +
-                    "| Created At: ${transfer.createdAt}\n" +
-                    "| Sent At: ${transfer.sentAt}\n" +
-                    "=============================================="
-                )
+    fun showTransferHistory (
+        customerService: CustomerService,
+        isSender : Boolean = false,
+        isReceiver : Boolean = false,
+        isAmount : Boolean = false,
+        isSentAt : Boolean = false
+    ) {
+        if (customerService.user != null) {
+            ownerTransfer.clear()
+            var transactions = transferList.filter {
+                (it.senderAccount.name == customerService.user!!.name && it.senderAccount.password == customerService.user!!.password) ||
+                (it.receiverAccount.name == customerService.user!!.name && it.receiverAccount.password == customerService.user!!.password)
             }
-        } else {
-            println("| You did have any transfer yet!!")
-        }
 
+            if (isSender) {
+                val sender = customerService.getReceiver("sender")
+                if (sender != null) {
+                    val list = transactions.filter {
+                        it.senderAccount.name == sender.name && it.senderAccount.password == sender.password
+                    }
+
+                    transactions = list
+                }
+            }
+            if (isReceiver) {
+                val receiver = customerService.getReceiver()
+                if (receiver != null) {
+                    val list = transactions.filter {
+                        it.receiverAccount.name == receiver.name && it.receiverAccount.password == receiver.password
+                    }
+
+                    transactions = list
+                }
+            }
+            if (isAmount) {
+                var amountFrom = amountInput("Amount From")
+                var amountTo = amountInput("Amount To")
+
+                while (amountFrom > amountTo) {
+                    println("Amount From is over than Amount To. Please input again!!")
+                    amountFrom = amountInput("Amount From")
+                    amountTo = amountInput("Amount To")
+                }
+
+                val list = transactions.filter {
+                    it.amount >= BigDecimal(amountFrom) && it.amount <= BigDecimal(amountTo)
+                }
+
+                transactions = list
+            }
+            if (isSentAt) {
+
+            }
+
+            ownerTransfer.addAll(transactions)
+
+            println("============== Transfer History ==============")
+            if (ownerTransfer.isNotEmpty()) {
+                for (transfer : Transaction in ownerTransfer) {
+                    println(
+                        "| Receiver Name: ${transfer.senderAccount.name}\n" +
+                        "| Receiver Name: ${transfer.receiverAccount.name}\n" +
+                        "| Amount: ${transfer.amount}\n" +
+                        "| Message: ${transfer.message}\n" +
+                        "| Created At: ${transfer.createdAt}\n" +
+                        "| Sent At: ${transfer.sentAt}\n" +
+                        "=============================================="
+                    )
+                }
+            } else {
+                println("| No Transaction Data...")
+            }
+        }
     }
 }

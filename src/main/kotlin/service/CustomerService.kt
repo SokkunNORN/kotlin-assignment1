@@ -8,7 +8,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class CustomerService {
-    var user : Customer? = null
+    var user : Customer? = Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(0), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh"))
     private val allCustomerList = mutableListOf<Customer>(
         Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(0), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
         Customer("Jenny", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
@@ -168,7 +168,7 @@ class CustomerService {
         }
     }
 
-    fun getReceiver () : Customer? {
+    fun getReceiver (label : String = "receiver") : Customer? {
         if (user != null) {
             val list = allCustomerList.filter { it.name != user!!.name || it.password != user!!.password }
             receiverList.clear()
@@ -176,7 +176,7 @@ class CustomerService {
             val menuList = mutableListOf<String>()
 
             if (receiverList.isNotEmpty()) {
-                println("======== Please select receiver account ========")
+                println("======== Please select $label account ========")
                 receiverList.forEachIndexed{ index, customer ->
                     println("| ${index + 1}. ${customer.name}")
                     menuList.add("${index + 1}")
@@ -220,16 +220,25 @@ class CustomerService {
 
     fun updateBalance (transaction: Transaction) {
         if (user != null) {
-            var index = allCustomerList.indexOf(transaction.senderAccount)
-            val senderBalance = transaction.senderAccount.balance.minus(transaction.amount)
-            user!!.balance = senderBalance
-            allCustomerList[index] = user!!
-
-            val receiver = transaction.receiverAccount
-            index = allCustomerList.indexOf(receiver)
-            val receiverBalance = receiver.balance.plus(transaction.amount)
-            receiver.balance = receiverBalance
-            allCustomerList[index] = receiver
+            allCustomerList.forEachIndexed { index, _ ->
+                if (
+                    allCustomerList[index].name == transaction.senderAccount.name &&
+                    allCustomerList[index].password == transaction.senderAccount.password
+                ) {
+                    val senderBalance = transaction.senderAccount.balance.minus(transaction.amount)
+                    user!!.balance = senderBalance
+                    allCustomerList[index] = user!!
+                }
+                if (
+                    allCustomerList[index].name == transaction.receiverAccount.name &&
+                    allCustomerList[index].password == transaction.receiverAccount.password
+                ) {
+                    val receiver = transaction.receiverAccount
+                    val receiverBalance = receiver.balance.plus(transaction.amount)
+                    receiver.balance = receiverBalance
+                    allCustomerList[index] = receiver
+                }
+            }
         }
     }
 }

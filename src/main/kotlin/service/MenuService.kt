@@ -6,18 +6,18 @@ class MenuService {
     companion object {
         fun showMainMenu () {
             println(
-                "=========== Welcome to Mini Bank App ===========\n" +
+                "########### Welcome to Mini Bank App ###########\n" +
                 "| 1. Customer Accounts                         |\n" +
                 "| 2. Transfer Fund                             |\n" +
                 "| 3. Transfer History                          |\n" +
                 "| 4. Top Up                                    |\n" +
                 "| 5. Exit App                                  |\n" +
-                "================================================"
+                "################################################"
             )
         }
 
         fun showCustomerMenu (user : Customer?) {
-            println("============== Customer Account ================")
+            println("############### Customer Account ###############")
             if (user != null) {
                 println(
                     "| 1. View Profile                              |\n" +
@@ -32,7 +32,20 @@ class MenuService {
                     "| 3. Exit                                      |"
                 )
             }
-            println("================================================")
+            println("################################################")
+        }
+
+        fun showTransferHistoryMenu () {
+            println(
+                "############# Transaction History ##############\n" +
+                "| 1. All Transactions                          |\n" +
+                "| 2. Filter by sender                          |\n" +
+                "| 3. Filter by receiver                        |\n" +
+                "| 4. Filter by amount                          |\n" +
+                "| 5. Filter by Sent Date                       |\n" +
+                "| 6. Exit                                      |\n" +
+                "################################################"
+            )
         }
 
         fun getNumberMenu (listMenu: List<String>) : Int {
