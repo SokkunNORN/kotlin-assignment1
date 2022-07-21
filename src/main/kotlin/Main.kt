@@ -1,9 +1,7 @@
-import model.Customer
-import model.Transaction
+
 import service.CustomerService
 import service.MenuService
 import service.TransferService
-import java.io.Console
 
 fun main(args: Array<String>) {
 //    Mini Bank Application
