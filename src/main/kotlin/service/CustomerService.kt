@@ -5,9 +5,7 @@ import model.Customer
 import model.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.time.Duration.Companion.parseOrNull
 
 class CustomerService {
     var user : Customer? = null
@@ -18,28 +16,6 @@ class CustomerService {
         Customer("Visa", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh"))
     )
     private var receiverList = mutableListOf<Customer>()
-
-    fun login () : Boolean {
-        println("Input name: ")
-        val name = readLine()
-        println("Input password: ")
-        val password = readLine()
-
-        val customer = allCustomerList.firstOrNull() {
-            it.name == name && it.password == password
-        } ?: kotlin.run {
-            println("Incorrect name and password!!")
-            return false
-        }
-
-        user = customer
-        println("Sign in successfully!!")
-        return  true
-    }
-
-    fun logout () {
-        user = null
-    }
 
     private fun textInput (label: String) : String {
         println("$label: ")
@@ -72,11 +48,44 @@ class CustomerService {
         }
     }
 
+    private fun genderInput () : String {
+        var gender = textInput("Gender (Male of Female)")
+        val genders = listOf("Male", "Female")
+        while (gender !in genders) {
+            println("Invalid gender. Please input again!!")
+            gender = textInput("Gender (Male of Female):")
+        }
+
+        return gender
+    }
+
+    fun login () : Boolean {
+        println("Input name: ")
+        val name = readLine()
+        println("Input password: ")
+        val password = readLine()
+
+        val customer = allCustomerList.firstOrNull() {
+            it.name == name && it.password == password
+        } ?: kotlin.run {
+            println("Incorrect name and password!!")
+            return false
+        }
+
+        user = customer
+        println("Sign in successfully!!")
+        return  true
+    }
+
+    fun logout () {
+        user = null
+    }
+
     fun createCustomer () : Boolean {
         println("Please input: ")
         val name = textInput("Name")
         val password = textInput("Password")
-        val gender = textInput("Gender")
+        val gender = genderInput()
         val dateOfBirth = localDateInput()
         val balance = BigDecimal(0)
         val streetNo = textInput("Street No")
