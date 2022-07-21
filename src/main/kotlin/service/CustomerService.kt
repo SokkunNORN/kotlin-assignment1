@@ -5,6 +5,9 @@ import model.Customer
 import model.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import kotlin.time.Duration.Companion.parseOrNull
 
 class CustomerService {
     var user : Customer? = null
@@ -48,12 +51,33 @@ class CustomerService {
         return text
     }
 
+    private fun localDateInput () : LocalDate {
+        var splitDate = ""
+        var date = textInput("Date of Birth (yyyy-MM-dd)")
+
+        while (date.length != 10 || date[4].toString() != "-" || date[7].toString() != "-") {
+            println("Invalid Date of Birth format, Please input again!!")
+            date = textInput("Date of Birth (yyyy-MM-dd)")
+        }
+
+        for (text : String in date.split("-")) {
+            splitDate += text
+        }
+
+        return try {
+            LocalDate.parse(splitDate, DateTimeFormatter.BASIC_ISO_DATE)
+        } catch (_: Exception) {
+            println("Invalid Date of Birth format, Please input again!!")
+            localDateInput()
+        }
+    }
+
     fun createCustomer () : Boolean {
         println("Please input: ")
         val name = textInput("Name")
         val password = textInput("Password")
         val gender = textInput("Gender")
-        val dateOfBirth = LocalDate.now()
+        val dateOfBirth = localDateInput()
         val balance = BigDecimal(0)
         val streetNo = textInput("Street No")
         val buildingNo = textInput("Building No")
