@@ -59,17 +59,17 @@ class CustomerService {
         val name = readLine()
         println("Input password: ")
         val password = readLine()
+        val allUser = allCustomerList.associateBy { it.name + it.password }
+        val auth = allUser[name + password]
 
-        val customer = allCustomerList.firstOrNull() {
-            it.name == name && it.password == password
-        } ?: kotlin.run {
-            println("ERROR: Incorrect name and password!!")
-            return false
+        if (auth != null) {
+            user = auth
+            println("Sign in successfully!!")
+            return  true
         }
 
-        user = customer
-        println("Sign in successfully!!")
-        return  true
+        println("ERROR: Incorrect name and password!!")
+        return false
     }
 
     fun logout () {

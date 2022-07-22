@@ -92,23 +92,23 @@ fun transactionHistoryMenu () {
 
     when (MenuService.getNumberMenu(list)) {
         1 -> {
-            transaction.showTransferHistory(customer)
+            transaction.allTransactions(customer)
             transactionHistoryMenu()
         }
         2 -> {
-            transaction.showTransferHistory(customer, isSender = true)
+            transaction.transactionBySender(customer)
             transactionHistoryMenu()
         }
         3 -> {
-            transaction.showTransferHistory(customer, isReceiver = true)
+            transaction.transactionByReceiver(customer)
             transactionHistoryMenu()
         }
         4 -> {
-            transaction.showTransferHistory(customer, isAmount = true)
+            transaction.transactionByAmount(customer)
             transactionHistoryMenu()
         }
         5 -> {
-            transaction.showTransferHistory(customer, isSentAt = true)
+            transaction.transactionBySentDate(customer)
             transactionHistoryMenu()
         }
     }

@@ -1,6 +1,5 @@
 package service
 
-import model.Customer
 import model.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -8,7 +7,6 @@ import java.time.format.DateTimeFormatter
 
 class TransferService {
     private val transferList = mutableListOf<Transaction>()
-    private val ownerTransfer = mutableListOf<Transaction>()
 
     private fun textInput (label: String) : String {
         println("$label: ")
@@ -46,6 +44,44 @@ class TransferService {
         }
     }
 
+    private fun getOwnTransaction (customerService: CustomerService) : List<Transaction> {
+        var transactions = mutableListOf<Transaction>()
+        if (customerService.user != null) {
+            val incomingTransaction = transferList.groupBy { it.receiverAccount.name + it.receiverAccount.password }
+            val outgoingTransaction = transferList.groupBy { it.senderAccount.name + it.senderAccount.password }
+
+            if (incomingTransaction[customerService.user!!.name + customerService.user!!.password] != null) {
+                transactions.addAll(
+                    incomingTransaction[customerService.user!!.name + customerService.user!!.password]!!
+                )
+            }
+            if (outgoingTransaction[customerService.user!!.name + customerService.user!!.password] != null) {
+                transactions.addAll(
+                    outgoingTransaction[customerService.user!!.name + customerService.user!!.password]!!
+                )
+            }
+        }
+        return transactions
+    }
+
+    private fun listTransaction (transactions: List<Transaction>) {
+        println("\n============== Transfer History ==============")
+        if (transactions.isNotEmpty()) {
+            for (transfer : Transaction in transactions) {
+                println(
+                    "| Receiver Name: ${transfer.senderAccount.name}\n" +
+                    "| Receiver Name: ${transfer.receiverAccount.name}\n" +
+                    "| Amount: ${transfer.amount}\n" +
+                    "| Message: ${transfer.message}\n" +
+                    "| Created At: ${transfer.createdAt}\n" +
+                    "| Sent At: ${transfer.sentAt}\n" +
+                    "=============================================="
+                )
+            }
+        } else {
+            println("\n| No Transaction Data...")
+        }
+    }
 
     fun createTransfer (customerService : CustomerService) : Transaction? {
         if (customerService.user == null) {
@@ -92,97 +128,74 @@ class TransferService {
         return null
     }
 
-    fun showTransferHistory (
-        customerService: CustomerService,
-        isSender : Boolean = false,
-        isReceiver : Boolean = false,
-        isAmount : Boolean = false,
-        isSentAt : Boolean = false
-    ) {
-        if (customerService.user != null) {
-            ownerTransfer.clear()
-            var transactions = transferList.filter {
-                (
-                    it.senderAccount.name == customerService.user!!.name &&
-                    it.senderAccount.password == customerService.user!!.password
-                ) || (
-                    it.receiverAccount.name == customerService.user!!.name &&
-                    it.receiverAccount.password == customerService.user!!.password
-                )
+    fun allTransactions (customerService: CustomerService) {
+        listTransaction(getOwnTransaction(customerService))
+    }
+
+    fun transactionBySender (customerService: CustomerService) {
+        var list = getOwnTransaction(customerService)
+        val transactions = mutableListOf<Transaction>()
+        val sender = customerService.getReceiver("sender")
+        if (sender != null) {
+            val map = list.groupBy { it.senderAccount.name + it.senderAccount.password }
+            if (map[sender.name + sender.password] != null) {
+                transactions.addAll(map[sender.name + sender.password]!!)
             }
-
-            if (isSender) {
-                val sender = customerService.getReceiver("sender")
-                if (sender != null) {
-                    val list = transactions.filter {
-                        it.senderAccount.name == sender.name && it.senderAccount.password == sender.password
-                    }
-
-                    transactions = list
-                }
-            }
-            if (isReceiver) {
-                val receiver = customerService.getReceiver()
-                if (receiver != null) {
-                    val list = transactions.filter {
-                        it.receiverAccount.name == receiver.name && it.receiverAccount.password == receiver.password
-                    }
-
-                    transactions = list
-                }
-            }
-            if (isAmount) {
-                var amountFrom = amountInput("Amount From")
-                var amountTo = amountInput("Amount To")
-
-                while (amountFrom > amountTo) {
-                    println("ERROR: Amount From is over than Amount To.\nPlease input again!!")
-                    amountFrom = amountInput("Amount From")
-                    amountTo = amountInput("Amount To")
-                }
-
-                val list = transactions.filter {
-                    it.amount >= BigDecimal(amountFrom) && it.amount <= BigDecimal(amountTo)
-                }
-
-                transactions = list
-            }
-            if (isSentAt) {
-                var from = localDateInput("Sent date FROM (yyyy-MM-dd)")
-                var to = localDateInput("Sent date TO (yyyy-MM-dd)")
-
-                while (from.isAfter(to)) {
-                    println("ERROR: Sent date to cannot be before Sent date from.\nPlease input again!!")
-                    from = localDateInput("Sent date FROM (yyyy-MM-dd)")
-                    to = localDateInput("Sent date TO (yyyy-MM-dd)")
-                }
-
-                val list = transactions.filter {
-                    (it.sentAt.toLocalDate().isAfter(from) && it.sentAt.toLocalDate().isBefore(to)) ||
-                    (it.sentAt.toLocalDate().isEqual(from) || it.sentAt.toLocalDate().isEqual(to))
-                }
-
-                transactions = list
-            }
-
-            ownerTransfer.addAll(transactions)
-
-            println("\n============== Transfer History ==============")
-            if (ownerTransfer.isNotEmpty()) {
-                for (transfer : Transaction in ownerTransfer) {
-                    println(
-                        "| Receiver Name: ${transfer.senderAccount.name}\n" +
-                        "| Receiver Name: ${transfer.receiverAccount.name}\n" +
-                        "| Amount: ${transfer.amount}\n" +
-                        "| Message: ${transfer.message}\n" +
-                        "| Created At: ${transfer.createdAt}\n" +
-                        "| Sent At: ${transfer.sentAt}\n" +
-                        "=============================================="
-                    )
-                }
-            } else {
-                println("\n| No Transaction Data...")
-            }
+        } else {
+            transactions.addAll(list)
         }
+        listTransaction(transactions)
+    }
+
+    fun transactionByReceiver (customerService: CustomerService) {
+        var list = getOwnTransaction(customerService)
+        val transactions = mutableListOf<Transaction>()
+        val receiver = customerService.getReceiver("receiver")
+        if (receiver != null) {
+            val map = list.groupBy { it.receiverAccount.name + it.receiverAccount.password }
+            if (map[receiver.name + receiver.password] != null) {
+                transactions.addAll(map[receiver.name + receiver.password]!!)
+            }
+        } else {
+            transactions.addAll(list)
+        }
+        listTransaction(transactions)
+    }
+
+    fun transactionByAmount (customerService: CustomerService) {
+        var list = getOwnTransaction(customerService)
+        var amountFrom = amountInput("Amount From")
+        var amountTo = amountInput("Amount To")
+
+        while (amountFrom > amountTo) {
+            println("ERROR: Amount From is over than Amount To.\nPlease input again!!")
+            amountFrom = amountInput("Amount From")
+            amountTo = amountInput("Amount To")
+        }
+
+        val transactions = list.filter {
+            it.amount >= BigDecimal(amountFrom) && it.amount <= BigDecimal(amountTo)
+        }
+
+        listTransaction(transactions)
+    }
+
+    fun transactionBySentDate (customerService: CustomerService) {
+        var list = getOwnTransaction(customerService)
+        var from = localDateInput("Sent date FROM (yyyy-MM-dd)")
+        var to = localDateInput("Sent date TO (yyyy-MM-dd)")
+
+        while (from.isAfter(to)) {
+            println("ERROR: Sent date to cannot be before Sent date from.\nPlease input again!!")
+            from = localDateInput("Sent date FROM (yyyy-MM-dd)")
+            to = localDateInput("Sent date TO (yyyy-MM-dd)")
+        }
+
+        val transactions = list.filter {
+            (it.sentAt.toLocalDate().isAfter(from) && it.sentAt.toLocalDate().isBefore(to)) ||
+            (it.sentAt.toLocalDate().isEqual(from) || it.sentAt.toLocalDate().isEqual(to))
+        }
+
+        listTransaction(transactions)
     }
 }
