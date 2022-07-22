@@ -28,7 +28,6 @@ class CustomerService {
     }
 
     private fun localDateInput () : LocalDate {
-        var splitDate = ""
         var date = textInput("Date of Birth (yyyy-MM-dd)")
 
         while (date.length != 10 || date[4].toString() != "-" || date[7].toString() != "-") {
@@ -36,12 +35,8 @@ class CustomerService {
             date = textInput("Date of Birth (yyyy-MM-dd)")
         }
 
-        for (text : String in date.split("-")) {
-            splitDate += text
-        }
-
         return try {
-            LocalDate.parse(splitDate, DateTimeFormatter.BASIC_ISO_DATE)
+            LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
         } catch (_: Exception) {
             println("ERROR: Invalid Date of Birth format.\nPlease input again!!")
             localDateInput()

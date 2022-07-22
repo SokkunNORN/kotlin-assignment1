@@ -31,7 +31,6 @@ class TransferService {
     }
 
     private fun localDateInput (label: String) : LocalDate {
-        var splitDate = ""
         var date = textInput(label)
 
         while (date.length != 10 || date[4].toString() != "-" || date[7].toString() != "-") {
@@ -39,12 +38,8 @@ class TransferService {
             date = textInput(label)
         }
 
-        for (text : String in date.split("-")) {
-            splitDate += text
-        }
-
         return try {
-            LocalDate.parse(splitDate, DateTimeFormatter.BASIC_ISO_DATE)
+            LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
         } catch (_: Exception) {
             println("ERROR: Invalid Date of Birth format.\nPlease input again!!")
             localDateInput(label)
@@ -107,8 +102,13 @@ class TransferService {
         if (customerService.user != null) {
             ownerTransfer.clear()
             var transactions = transferList.filter {
-                (it.senderAccount.name == customerService.user!!.name && it.senderAccount.password == customerService.user!!.password) ||
-                (it.receiverAccount.name == customerService.user!!.name && it.receiverAccount.password == customerService.user!!.password)
+                (
+                    it.senderAccount.name == customerService.user!!.name &&
+                    it.senderAccount.password == customerService.user!!.password
+                ) || (
+                    it.receiverAccount.name == customerService.user!!.name &&
+                    it.receiverAccount.password == customerService.user!!.password
+                )
             }
 
             if (isSender) {
