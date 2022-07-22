@@ -6,18 +6,19 @@ class MenuService {
     companion object {
         fun showMainMenu () {
             println(
+                "\n" +
                 "########### Welcome to Mini Bank App ###########\n" +
                 "| 1. Customer Accounts                         |\n" +
                 "| 2. Transfer Fund                             |\n" +
                 "| 3. Transfer History                          |\n" +
                 "| 4. Top Up                                    |\n" +
                 "| 5. Exit App                                  |\n" +
-                "################################################"
+                "################################################\n"
             )
         }
 
         fun showCustomerMenu (user : Customer?) {
-            println("############### Customer Account ###############")
+            println("\n############### Customer Account ###############")
             if (user != null) {
                 println(
                     "| 1. View Profile                              |\n" +
@@ -32,11 +33,12 @@ class MenuService {
                     "| 3. Exit                                      |"
                 )
             }
-            println("################################################")
+            println("################################################\n")
         }
 
         fun showTransferHistoryMenu () {
             println(
+                "\n" +
                 "############# Transaction History ##############\n" +
                 "| 1. All Transactions                          |\n" +
                 "| 2. Filter by sender                          |\n" +
@@ -44,7 +46,7 @@ class MenuService {
                 "| 4. Filter by amount                          |\n" +
                 "| 5. Filter by Sent Date                       |\n" +
                 "| 6. Exit                                      |\n" +
-                "################################################"
+                "################################################\n"
             )
         }
 
@@ -63,7 +65,7 @@ class MenuService {
                         }
                         isValid = true
                     }
-                    else -> println("Please input valid number again...")
+                    else -> println("ERROR: Please input valid number again!!")
                 }
             } while (!isValid)
 

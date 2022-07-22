@@ -8,9 +8,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class CustomerService {
-    var user : Customer? = Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(0), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh"))
+    var user : Customer? = Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(100000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh"))
     private val allCustomerList = mutableListOf<Customer>(
-        Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(0), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
+        Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(100000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
         Customer("Jenny", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
         Customer("Karry", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
         Customer("Visa", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh"))
@@ -32,7 +32,7 @@ class CustomerService {
         var date = textInput("Date of Birth (yyyy-MM-dd)")
 
         while (date.length != 10 || date[4].toString() != "-" || date[7].toString() != "-") {
-            println("Invalid Date of Birth format, Please input again!!")
+            println("ERROR: Invalid Date of Birth format.\nPlease input again!!")
             date = textInput("Date of Birth (yyyy-MM-dd)")
         }
 
@@ -43,7 +43,7 @@ class CustomerService {
         return try {
             LocalDate.parse(splitDate, DateTimeFormatter.BASIC_ISO_DATE)
         } catch (_: Exception) {
-            println("Invalid Date of Birth format, Please input again!!")
+            println("ERROR: Invalid Date of Birth format.\nPlease input again!!")
             localDateInput()
         }
     }
@@ -52,7 +52,7 @@ class CustomerService {
         var gender = textInput("Gender (Male of Female)")
         val genders = listOf("Male", "Female")
         while (gender !in genders) {
-            println("Invalid gender. Please input again!!")
+            println("ERROR: Invalid gender.\nPlease input again!!")
             gender = textInput("Gender (Male of Female):")
         }
 
@@ -68,7 +68,7 @@ class CustomerService {
         val customer = allCustomerList.firstOrNull() {
             it.name == name && it.password == password
         } ?: kotlin.run {
-            println("Incorrect name and password!!")
+            println("ERROR: Incorrect name and password!!")
             return false
         }
 
@@ -129,7 +129,7 @@ class CustomerService {
 
     fun viewProfile () {
         println(
-            "================= Profile ================="
+            "\n================= Profile ================="
         )
         if (user != null) {
             println(
@@ -150,7 +150,7 @@ class CustomerService {
 
     fun customerListView () {
         println(
-            "================= Profile ================="
+            "\n================= Profile ================="
         )
         for (customer : Customer in allCustomerList) {
             println(
@@ -176,17 +176,18 @@ class CustomerService {
             val menuList = mutableListOf<String>()
 
             if (receiverList.isNotEmpty()) {
-                println("======== Please select $label account ========")
+                println("\n======== Please select $label account ========")
                 receiverList.forEachIndexed{ index, customer ->
                     println("| ${index + 1}. ${customer.name}")
                     menuList.add("${index + 1}")
                 }
+                println("")
 
                 val number = MenuService.getNumberMenu(menuList)
 
                 return receiverList[number - 1]
             } else {
-                println("Did not have account receiver yet!!")
+                println("\n| Did not have account receiver yet!!")
             }
         }
         return null
@@ -199,7 +200,7 @@ class CustomerService {
             var amount = textInput("Amount").toIntOrNull()
 
             while (amount == null || amount < 1) {
-                println("Invalid amount, Please input again!!")
+                println("ERROR: Invalid amount.\nPlease input again!!")
                 amount = textInput("Amount").toIntOrNull()
             }
 

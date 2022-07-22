@@ -3,6 +3,8 @@ package service
 import model.Customer
 import model.Transaction
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class TransferService {
     private val transferList = mutableListOf<Transaction>()
@@ -21,20 +23,42 @@ class TransferService {
     private fun amountInput (label: String = "Amount") : Int {
         var amount = textInput(label).toIntOrNull()
         while (amount == null || amount < 1) {
-            println("Invalid amount, Please input again!!")
+            println("ERROR: Invalid amount.\nPlease input again!!")
             amount = textInput(label).toIntOrNull()
         }
 
         return amount
     }
 
+    private fun localDateInput (label: String) : LocalDate {
+        var splitDate = ""
+        var date = textInput(label)
+
+        while (date.length != 10 || date[4].toString() != "-" || date[7].toString() != "-") {
+            println("ERROR: Invalid $label format.\nPlease input again!!")
+            date = textInput(label)
+        }
+
+        for (text : String in date.split("-")) {
+            splitDate += text
+        }
+
+        return try {
+            LocalDate.parse(splitDate, DateTimeFormatter.BASIC_ISO_DATE)
+        } catch (_: Exception) {
+            println("ERROR: Invalid Date of Birth format.\nPlease input again!!")
+            localDateInput(label)
+        }
+    }
+
+
     fun createTransfer (customerService : CustomerService) : Transaction? {
         if (customerService.user == null) {
-            println("Please sign in to the application first!!")
+            println("ERROR: Please sign in to the application first!!")
             return null
         }
         if (customerService.user!!.balance <= BigDecimal(0)) {
-            println("You balance is ${customerService.user!!.balance}. \nPlease top up your balance!!")
+            println("ERROR: You balance is ${customerService.user!!.balance}. \nPlease top up your balance!!")
             return null
         }
 
@@ -42,7 +66,7 @@ class TransferService {
         var amount = amountInput()
 
         while (BigDecimal(amount) > customerService.user!!.balance) {
-            println("You balance is not enough. Please input again...")
+            println("ERROR: You balance is not enough.\nPlease input again!!")
             amount = amountInput()
         }
         val message = textInput("Message")
@@ -112,7 +136,7 @@ class TransferService {
                 var amountTo = amountInput("Amount To")
 
                 while (amountFrom > amountTo) {
-                    println("Amount From is over than Amount To. Please input again!!")
+                    println("ERROR: Amount From is over than Amount To.\nPlease input again!!")
                     amountFrom = amountInput("Amount From")
                     amountTo = amountInput("Amount To")
                 }
@@ -124,12 +148,26 @@ class TransferService {
                 transactions = list
             }
             if (isSentAt) {
+                var from = localDateInput("Sent date FROM (yyyy-MM-dd)")
+                var to = localDateInput("Sent date TO (yyyy-MM-dd)")
 
+                while (from.isAfter(to)) {
+                    println("ERROR: Sent date to cannot be before Sent date from.\nPlease input again!!")
+                    from = localDateInput("Sent date FROM (yyyy-MM-dd)")
+                    to = localDateInput("Sent date TO (yyyy-MM-dd)")
+                }
+
+                val list = transactions.filter {
+                    (it.sentAt.toLocalDate().isAfter(from) && it.sentAt.toLocalDate().isBefore(to)) ||
+                    (it.sentAt.toLocalDate().isEqual(from) || it.sentAt.toLocalDate().isEqual(to))
+                }
+
+                transactions = list
             }
 
             ownerTransfer.addAll(transactions)
 
-            println("============== Transfer History ==============")
+            println("\n============== Transfer History ==============")
             if (ownerTransfer.isNotEmpty()) {
                 for (transfer : Transaction in ownerTransfer) {
                     println(
@@ -143,7 +181,7 @@ class TransferService {
                     )
                 }
             } else {
-                println("| No Transaction Data...")
+                println("\n| No Transaction Data...")
             }
         }
     }
