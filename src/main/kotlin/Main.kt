@@ -35,7 +35,7 @@ fun mainMenu () {
                     4 -> customer.topUpBalance()
                 }
             } else {
-                println("Please sign in the application first!!!")
+                println("ERROR: Please sign in the application first!!!")
             }
             mainMenu()
         }
