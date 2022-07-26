@@ -1,5 +1,6 @@
 package service
 
+import command.Extension.khFormat
 import model.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -45,7 +46,7 @@ class TransferService {
     }
 
     private fun getOwnTransaction (customerService: CustomerService) : List<Transaction> {
-        var transactions = mutableListOf<Transaction>()
+        val transactions = mutableListOf<Transaction>()
         if (customerService.user != null) {
             val incomingTransaction = transferList.groupBy { it.receiverAccount.name + it.receiverAccount.password }
             val outgoingTransaction = transferList.groupBy { it.senderAccount.name + it.senderAccount.password }
@@ -69,12 +70,12 @@ class TransferService {
         if (transactions.isNotEmpty()) {
             for (transfer : Transaction in transactions) {
                 println(
-                    "| Receiver Name: ${transfer.senderAccount.name}\n" +
+                    "| Sender Name: ${transfer.senderAccount.name}\n" +
                     "| Receiver Name: ${transfer.receiverAccount.name}\n" +
                     "| Amount: ${transfer.amount}\n" +
                     "| Message: ${transfer.message}\n" +
-                    "| Created At: ${transfer.createdAt}\n" +
-                    "| Sent At: ${transfer.sentAt}\n" +
+                    "| Created At: ${transfer.createdAt.khFormat()}\n" +
+                    "| Sent At: ${transfer.sentAt.khFormat()}\n" +
                     "=============================================="
                 )
             }
@@ -133,7 +134,7 @@ class TransferService {
     }
 
     fun transactionBySender (customerService: CustomerService) {
-        var list = getOwnTransaction(customerService)
+        val list = getOwnTransaction(customerService)
         val transactions = mutableListOf<Transaction>()
         val sender = customerService.getReceiver("sender")
         if (sender != null) {

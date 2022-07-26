@@ -1,5 +1,6 @@
 package service
 
+import command.Extension.khFormat
 import model.Address
 import model.Customer
 import model.Transaction
@@ -130,7 +131,7 @@ class CustomerService {
             println(
                 "| Name: ${user!!.name}\n" +
                 "| Gender: ${user!!.gender}\n" +
-                "| Date of Birth: ${user!!.dateOfBirth}\n" +
+                "| Date of Birth: ${user!!.dateOfBirth.khFormat()}\n" +
                 "| Balance: ${user!!.balance}\n" +
                 "| Address: \n" +
                 "   - Street No: ${user!!.address.streetNo}\n" +
@@ -151,7 +152,7 @@ class CustomerService {
             println(
                 "| Name: ${customer!!.name}\n" +
                 "| Gender: ${customer!!.gender}\n" +
-                "| Date of Birth:  ${customer!!.dateOfBirth}\n" +
+                "| Date of Birth:  ${customer!!.dateOfBirth.khFormat()}\n" +
                 "| Address: \n" +
                 "   - Street No: ${customer!!.address.streetNo}\n" +
                 "   - Builder No: ${customer!!.address.buildingNo}\n" +
