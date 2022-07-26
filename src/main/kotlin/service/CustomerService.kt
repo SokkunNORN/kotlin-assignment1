@@ -2,12 +2,12 @@ package service
 
 import command.Extension.khFormat
 import command.Extension.stringToBigDecimal
+import command.Extension.toLocalDate
 import model.Address
 import model.Customer
 import model.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class CustomerService {
     var user : Customer? = Customer(
@@ -42,19 +42,7 @@ class CustomerService {
     }
 
     private fun localDateInput () : LocalDate {
-        var date = textInput("Date of Birth (yyyy-MM-dd)")
-
-        while (date.length != 10 || date[4].toString() != "-" || date[7].toString() != "-") {
-            println("ERROR: Invalid Date of Birth format.\nPlease input again!!")
-            date = textInput("Date of Birth (yyyy-MM-dd)")
-        }
-
-        return try {
-            LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
-        } catch (_: Exception) {
-            println("ERROR: Invalid Date of Birth format.\nPlease input again!!")
-            localDateInput()
-        }
+        return textInput("Date of Birth (dd-MM-yyyy)").toLocalDate("Date of Birth") ?: localDateInput()
     }
 
     private fun genderInput () : String {
@@ -116,7 +104,7 @@ class CustomerService {
             password,
             gender,
             dateOfBirth,
-            BigDecimal(balance.toInt()),
+            balance,
             address
         )
 
@@ -131,7 +119,6 @@ class CustomerService {
                 user = customer
                 true
             }
-            2 -> false
             else -> false
         }
     }

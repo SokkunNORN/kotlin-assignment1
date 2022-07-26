@@ -2,6 +2,7 @@ package service
 
 import command.Extension.khFormat
 import command.Extension.stringToBigDecimal
+import command.Extension.toLocalDate
 import model.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -30,19 +31,7 @@ class TransferService {
     }
 
     private fun localDateInput (label: String) : LocalDate {
-        var date = textInput(label)
-
-        while (date.length != 10 || date[4].toString() != "-" || date[7].toString() != "-") {
-            println("ERROR: Invalid $label format.\nPlease input again!!")
-            date = textInput(label)
-        }
-
-        return try {
-            LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
-        } catch (_: Exception) {
-            println("ERROR: Invalid Date of Birth format.\nPlease input again!!")
-            localDateInput(label)
-        }
+        return textInput("$label (dd-MM-yyyy)").toLocalDate(label) ?: localDateInput(label)
     }
 
     private fun getOwnTransaction (customerService: CustomerService) : List<Transaction> {
@@ -183,13 +172,13 @@ class TransferService {
 
     fun transactionBySentDate (customerService: CustomerService) {
         val list = getOwnTransaction(customerService)
-        var from = localDateInput("Sent date FROM (yyyy-MM-dd)")
-        var to = localDateInput("Sent date TO (yyyy-MM-dd)")
+        var from = localDateInput("Sent date FROM")
+        var to = localDateInput("Sent date TO")
 
         while (from.isAfter(to)) {
             println("ERROR: Sent date to cannot be before Sent date from.\nPlease input again!!")
-            from = localDateInput("Sent date FROM (yyyy-MM-dd)")
-            to = localDateInput("Sent date TO (yyyy-MM-dd)")
+            from = localDateInput("Sent date FROM")
+            to = localDateInput("Sent date TO")
         }
 
         val transactions = list.filter {

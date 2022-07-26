@@ -17,6 +17,26 @@ object Extension {
         return this.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss"))
     }
 
+    fun String.toLocalDate(label: String) : LocalDate? {
+        val list = this.split("-")
+        if (this.length != 10) {
+            println("ERROR: Invalid $label format.\nPlease input again!!")
+            return null
+        }
+        if (list.size < 3) {
+            println("ERROR: Invalid $label format.\nPlease input again!!")
+            return null
+        }
+        val date = "${list[2]}-${list[1]}-${list[0]}"
+
+        return try {
+            LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
+        } catch (_: Exception) {
+            println("ERROR: Invalid $label format.\nPlease input again!!")
+            null
+        }
+    }
+
     fun String.stringToBigDecimal() : BigDecimal? {
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.DOWN
