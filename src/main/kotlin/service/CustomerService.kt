@@ -3,11 +3,13 @@ package service
 import command.Extension.khFormat
 import command.Extension.stringToBigDecimal
 import command.Extension.toLocalDate
+import enum.Gender
 import model.Address
 import model.Customer
 import model.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.*
 
 class CustomerService {
     var user : Customer? = Customer(
@@ -47,10 +49,10 @@ class CustomerService {
 
     private fun genderInput () : String {
         var gender = textInput("Gender (Male of Female)")
-        val genders = listOf("Male", "Female")
-        while (gender !in genders) {
+        val uppercase = gender.uppercase()
+        while (Gender.values().find { it.name == uppercase } == null) {
             println("ERROR: Invalid gender.\nPlease input again!!")
-            gender = textInput("Gender (Male of Female):")
+            gender = textInput("Gender (Male of Female)")
         }
 
         return gender

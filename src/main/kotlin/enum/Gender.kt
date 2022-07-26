@@ -1,5 +1,5 @@
 package enum
 
 enum class Gender {
-    Male, Female
+    MALE, FEMALE
 }
