@@ -149,7 +149,7 @@ class TransferService {
     }
 
     fun transactionByReceiver (customerService: CustomerService) {
-        var list = getOwnTransaction(customerService)
+        val list = getOwnTransaction(customerService)
         val transactions = mutableListOf<Transaction>()
         val receiver = customerService.getReceiver("receiver")
         if (receiver != null) {
@@ -164,7 +164,7 @@ class TransferService {
     }
 
     fun transactionByAmount (customerService: CustomerService) {
-        var list = getOwnTransaction(customerService)
+        val list = getOwnTransaction(customerService)
         var amountFrom = amountInput("Amount From")
         var amountTo = amountInput("Amount To")
 
@@ -182,7 +182,7 @@ class TransferService {
     }
 
     fun transactionBySentDate (customerService: CustomerService) {
-        var list = getOwnTransaction(customerService)
+        val list = getOwnTransaction(customerService)
         var from = localDateInput("Sent date FROM (yyyy-MM-dd)")
         var to = localDateInput("Sent date TO (yyyy-MM-dd)")
 

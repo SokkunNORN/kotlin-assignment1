@@ -9,14 +9,26 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class CustomerService {
-    var user : Customer? = Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(100000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh"))
-    private val allCustomerList = mutableListOf<Customer>(
+    var user : Customer? = Customer(
+        "Tom",
+        "12",
+        "Male", LocalDate.now(),
+        BigDecimal(100000),
+        Address(
+            "310-2",
+            "Building-2",
+            "KohPich",
+            "Chamkamon",
+            "Phnom Penh"
+        )
+    )
+    private val allCustomerList = mutableListOf(
         Customer("Tom", "12", "Male", LocalDate.now(), BigDecimal(100000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
         Customer("Jenny", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
         Customer("Karry", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh")),
         Customer("Visa", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh"))
     )
-    private var receiverList = mutableListOf<Customer>()
+    private val receiverList = mutableListOf<Customer>()
 
     private fun textInput (label: String) : String {
         println("$label: ")
@@ -150,15 +162,15 @@ class CustomerService {
         )
         for (customer : Customer in allCustomerList) {
             println(
-                "| Name: ${customer!!.name}\n" +
-                "| Gender: ${customer!!.gender}\n" +
-                "| Date of Birth:  ${customer!!.dateOfBirth.khFormat()}\n" +
+                "| Name: ${customer.name}\n" +
+                "| Gender: ${customer.gender}\n" +
+                "| Date of Birth:  ${customer.dateOfBirth.khFormat()}\n" +
                 "| Address: \n" +
-                "   - Street No: ${customer!!.address.streetNo}\n" +
-                "   - Builder No: ${customer!!.address.buildingNo}\n" +
-                "   - District: ${customer!!.address.district}\n" +
-                "   - Commune: ${customer!!.address.commune}\n" +
-                "   - Province/City: ${customer!!.address.province}\n" +
+                "   - Street No: ${customer.address.streetNo}\n" +
+                "   - Builder No: ${customer.address.buildingNo}\n" +
+                "   - District: ${customer.address.district}\n" +
+                "   - Commune: ${customer.address.commune}\n" +
+                "   - Province/City: ${customer.address.province}\n" +
                 "==========================================="
             )
         }
