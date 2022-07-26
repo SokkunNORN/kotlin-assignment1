@@ -1,6 +1,7 @@
 package service
 
 import command.Extension.khFormat
+import command.Extension.stringToBigDecimal
 import model.Address
 import model.Customer
 import model.Transaction
@@ -205,11 +206,10 @@ class CustomerService {
         if (user == null) {
             println("Please sign in the application first!!")
         } else {
-            var amount = textInput("Amount").toIntOrNull()
+            var amount = textInput("Amount").stringToBigDecimal()
 
-            while (amount == null || amount < 1) {
-                println("ERROR: Invalid amount.\nPlease input again!!")
-                amount = textInput("Amount").toIntOrNull()
+            while (amount == null || amount < BigDecimal(1)) {
+                amount = textInput("Amount").stringToBigDecimal()
             }
 
             println(
@@ -218,7 +218,7 @@ class CustomerService {
             )
             when (MenuService.getNumberMenu(listOf("1", "2"))) {
                 1 -> {
-                    val newBalance = user!!.balance.plus(BigDecimal(amount))
+                    val newBalance = user!!.balance.plus(amount)
                     user!!.balance = newBalance
                     println("You have topped up balance successfully!!")
                 }

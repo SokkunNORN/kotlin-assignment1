@@ -1,6 +1,7 @@
 package service
 
 import command.Extension.khFormat
+import command.Extension.stringToBigDecimal
 import model.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -19,11 +20,10 @@ class TransferService {
         return text
     }
 
-    private fun amountInput (label: String = "Amount") : Int {
-        var amount = textInput(label).toIntOrNull()
-        while (amount == null || amount < 1) {
-            println("ERROR: Invalid amount.\nPlease input again!!")
-            amount = textInput(label).toIntOrNull()
+    private fun amountInput (label: String = "Amount") : BigDecimal {
+        var amount = textInput(label).stringToBigDecimal()
+        while (amount == null || amount < BigDecimal(1)) {
+            amount = textInput(label).stringToBigDecimal()
         }
 
         return amount
@@ -97,7 +97,7 @@ class TransferService {
         println("Please input: ")
         var amount = amountInput()
 
-        while (BigDecimal(amount) > customerService.user!!.balance) {
+        while (amount > customerService.user!!.balance) {
             println("ERROR: You balance is not enough.\nPlease input again!!")
             amount = amountInput()
         }
@@ -108,7 +108,7 @@ class TransferService {
             val transfer = Transaction(
                 customerService.user!!,
                 customer,
-                amount = BigDecimal(amount),
+                amount,
                 message
             )
 
@@ -175,7 +175,7 @@ class TransferService {
         }
 
         val transactions = list.filter {
-            it.amount >= BigDecimal(amountFrom) && it.amount <= BigDecimal(amountTo)
+            it.amount in amountFrom..amountTo
         }
 
         listTransaction(transactions)
