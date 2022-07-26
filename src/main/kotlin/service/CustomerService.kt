@@ -2,14 +2,11 @@ package service
 
 import command.Extension.khFormat
 import command.Extension.stringToBigDecimal
-import command.Extension.toLocalDate
-import enum.Gender
 import model.Address
 import model.Customer
 import model.Transaction
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.util.*
 
 class CustomerService {
     var user : Customer? = Customer(
@@ -32,37 +29,11 @@ class CustomerService {
         Customer("Visa", "12", "Female", LocalDate.now(), BigDecimal(1000), Address("310-2", "Building-2", "KohPich", "Chamkamon", "Phnom Penh"))
     )
     private val receiverList = mutableListOf<Customer>()
-
-    private fun textInput (label: String) : String {
-        println("$label: ")
-        var text = readLine()
-        while (text == null) {
-            text = readLine()
-        }
-
-        return text
-    }
-
-    private fun localDateInput () : LocalDate {
-        return textInput("Date of Birth (dd-MM-yyyy)").toLocalDate("Date of Birth") ?: localDateInput()
-    }
-
-    private fun genderInput () : String {
-        var gender = textInput("Gender (Male of Female)")
-        val uppercase = gender.uppercase()
-        while (Gender.values().find { it.name == uppercase } == null) {
-            println("ERROR: Invalid gender.\nPlease input again!!")
-            gender = textInput("Gender (Male of Female)")
-        }
-
-        return gender
-    }
+    private val textField = TextInputService()
 
     fun login () : Boolean {
-        println("Input name: ")
-        val name = readLine()
-        println("Input password: ")
-        val password = readLine()
+        val name = textField.text("Name")
+        val password = textField.text("Password")
         val allUser = allCustomerList.associateBy { it.name + it.password }
         val auth = allUser[name + password]
 
@@ -82,16 +53,16 @@ class CustomerService {
 
     fun createCustomer () : Boolean {
         println("Please input: ")
-        val name = textInput("Name")
-        val password = textInput("Password")
-        val gender = genderInput()
-        val dateOfBirth = localDateInput()
+        val name = textField.text("Name")
+        val password = textField.text("Password")
+        val gender = textField.gender()
+        val dateOfBirth = textField.localDate("Date of Birth")
         val balance = BigDecimal(0)
-        val streetNo = textInput("Street No")
-        val buildingNo = textInput("Building No")
-        val district = textInput("District")
-        val commune = textInput("Commune")
-        val province = textInput("City/Province")
+        val streetNo = textField.text("Street No")
+        val buildingNo = textField.text("Building No")
+        val district = textField.text("District")
+        val commune = textField.text("Commune")
+        val province = textField.text("City/Province")
 
         val address = Address(
             streetNo,
@@ -195,10 +166,10 @@ class CustomerService {
         if (user == null) {
             println("Please sign in the application first!!")
         } else {
-            var amount = textInput("Amount").stringToBigDecimal()
+            var amount = textField.text("Amount").stringToBigDecimal()
 
             while (amount == null || amount < BigDecimal(1)) {
-                amount = textInput("Amount").stringToBigDecimal()
+                amount = textField.text("Amount").stringToBigDecimal()
             }
 
             println(

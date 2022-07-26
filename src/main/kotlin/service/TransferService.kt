@@ -1,38 +1,12 @@
 package service
 
 import command.Extension.khFormat
-import command.Extension.stringToBigDecimal
-import command.Extension.toLocalDate
 import model.Transaction
 import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class TransferService {
     private val transferList = mutableListOf<Transaction>()
-
-    private fun textInput (label: String) : String {
-        println("$label: ")
-        var text = readLine()
-        while (text == null) {
-            text = readLine()
-        }
-
-        return text
-    }
-
-    private fun amountInput (label: String = "Amount") : BigDecimal {
-        var amount = textInput(label).stringToBigDecimal()
-        while (amount == null || amount < BigDecimal(1)) {
-            amount = textInput(label).stringToBigDecimal()
-        }
-
-        return amount
-    }
-
-    private fun localDateInput (label: String) : LocalDate {
-        return textInput("$label (dd-MM-yyyy)").toLocalDate(label) ?: localDateInput(label)
-    }
+    private val textField = TextInputService()
 
     private fun getOwnTransaction (customerService: CustomerService) : List<Transaction> {
         val transactions = mutableListOf<Transaction>()
@@ -84,13 +58,13 @@ class TransferService {
         }
 
         println("Please input: ")
-        var amount = amountInput()
+        var amount = textField.amount()
 
         while (amount > customerService.user!!.balance) {
             println("ERROR: You balance is not enough.\nPlease input again!!")
-            amount = amountInput()
+            amount = textField.amount()
         }
-        val message = textInput("Message")
+        val message = textField.text("Message")
         val customer = customerService.getReceiver()
 
         if (customer != null) {
@@ -154,13 +128,13 @@ class TransferService {
 
     fun transactionByAmount (customerService: CustomerService) {
         val list = getOwnTransaction(customerService)
-        var amountFrom = amountInput("Amount From")
-        var amountTo = amountInput("Amount To")
+        var amountFrom = textField.amount("Amount From")
+        var amountTo = textField.amount("Amount To")
 
         while (amountFrom > amountTo) {
             println("ERROR: Amount From is over than Amount To.\nPlease input again!!")
-            amountFrom = amountInput("Amount From")
-            amountTo = amountInput("Amount To")
+            amountFrom = textField.amount("Amount From")
+            amountTo = textField.amount("Amount To")
         }
 
         val transactions = list.filter {
@@ -172,13 +146,13 @@ class TransferService {
 
     fun transactionBySentDate (customerService: CustomerService) {
         val list = getOwnTransaction(customerService)
-        var from = localDateInput("Sent date FROM")
-        var to = localDateInput("Sent date TO")
+        var from = textField.localDate("Sent date FROM")
+        var to = textField.localDate("Sent date TO")
 
         while (from.isAfter(to)) {
             println("ERROR: Sent date to cannot be before Sent date from.\nPlease input again!!")
-            from = localDateInput("Sent date FROM")
-            to = localDateInput("Sent date TO")
+            from = textField.localDate("Sent date FROM")
+            to = textField.localDate("Sent date TO")
         }
 
         val transactions = list.filter {

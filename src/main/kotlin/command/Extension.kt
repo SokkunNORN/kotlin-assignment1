@@ -48,4 +48,12 @@ object Extension {
         return null
     }
 
+    fun String?.isNull(label: String) : String? {
+        return if (this.isNullOrEmpty()) {
+            println("ERROR: The $label field is required.")
+            null
+        } else {
+            this
+        }
+    }
 }
