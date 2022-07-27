@@ -1,5 +1,7 @@
 package command
 
+import model.Customer
+import model.Transaction
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -9,15 +11,15 @@ import java.time.format.DateTimeFormatter
 
 object Extension {
 
-    fun LocalDate.khFormat() : String {
+    fun LocalDate.khFormat () : String {
         return this.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
     }
 
-    fun LocalDateTime.khFormat() : String {
+    fun LocalDateTime.khFormat () : String {
         return this.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss"))
     }
 
-    fun String.toLocalDate(label: String) : LocalDate? {
+    fun String.toLocalDate (label: String) : LocalDate? {
         val list = this.split("-")
         if (this.length != 10) {
             println("ERROR: Invalid $label format.\nPlease input again!!")
@@ -37,7 +39,7 @@ object Extension {
         }
     }
 
-    fun String.stringToBigDecimal() : BigDecimal? {
+    fun String.stringToBigDecimal () : BigDecimal? {
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.DOWN
         if (this.toDoubleOrNull() != null) {
@@ -48,12 +50,31 @@ object Extension {
         return null
     }
 
-    fun String?.isNull(label: String) : String? {
+    fun String?.isNull (label: String) : String? {
         return if (this.isNullOrEmpty()) {
             println("ERROR: The $label field is required.")
             null
         } else {
             this
         }
+    }
+
+    fun List<Transaction>.owner (user: Customer) : List<Transaction> {
+        val transactions = mutableListOf<Transaction>()
+        val incomingTransaction = this.groupBy { it.receiverAccount.name + it.receiverAccount.password }
+        val outgoingTransaction = this.groupBy { it.senderAccount.name + it.senderAccount.password }
+
+        if (incomingTransaction[user.name + user.password] != null) {
+            transactions.addAll(
+                incomingTransaction[user.name + user.password]!!
+            )
+        }
+        if (outgoingTransaction[user.name + user.password] != null) {
+            transactions.addAll(
+                outgoingTransaction[user.name + user.password]!!
+            )
+        }
+
+        return transactions
     }
 }

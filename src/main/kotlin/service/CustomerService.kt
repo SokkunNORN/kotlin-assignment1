@@ -166,11 +166,10 @@ class CustomerService {
         if (user == null) {
             println("Please sign in the application first!!")
         } else {
-            var amount = textField.text("Amount").stringToBigDecimal()
-
-            while (amount == null || amount < BigDecimal(1)) {
-                amount = textField.text("Amount").stringToBigDecimal()
-            }
+            var amount: BigDecimal
+            do {
+               amount = textField.amount("Amount")
+            } while (amount < BigDecimal(1))
 
             println(
                 "1. Top up\n" +
@@ -180,7 +179,7 @@ class CustomerService {
                 1 -> {
                     val newBalance = user!!.balance.plus(amount)
                     user!!.balance = newBalance
-                    println("You have topped up balance successfully!!")
+                    println("You have topped up balance $amount successfully!!")
                 }
                 2 -> println("You have cancelled top up balance successfully!!")
             }
