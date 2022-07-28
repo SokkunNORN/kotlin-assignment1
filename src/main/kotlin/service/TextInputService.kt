@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 class TextInputService {
     fun text (label: String) : String {
-        println("$label: ")
+        print("$label: ")
         return readLine().isNull(label) ?: text(label)
     }
 

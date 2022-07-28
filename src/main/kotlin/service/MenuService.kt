@@ -55,7 +55,7 @@ class MenuService {
             var menuNumber: Int = -1
 
             do {
-                println("Input Number: ")
+                print("Input Number: ")
                 var menu = readLine()
                 when (menu) {
                     in listMenu

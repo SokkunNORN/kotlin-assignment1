@@ -1,7 +1,9 @@
 package command
 
+import command.Extension.khFormat
 import model.Customer
 import model.Transaction
+import service.CustomerService
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
