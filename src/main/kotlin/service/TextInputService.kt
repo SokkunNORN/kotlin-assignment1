@@ -14,10 +14,10 @@ class TextInputService {
     }
 
     fun gender () : String {
-        var gender = text("Gender (Male of Female)").uppercase()
+        var gender = text("Gender [${Gender.values().joinToString()}]").uppercase()
         while (Gender.values().find { it.name == gender } == null) {
             println("ERROR: Invalid gender.\nPlease input again!!")
-            gender = text("Gender (Male of Female)").uppercase()
+            gender = text("Gender [${Gender.values().joinToString()}]").uppercase()
         }
 
         return gender
